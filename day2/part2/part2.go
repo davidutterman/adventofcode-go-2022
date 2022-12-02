@@ -13,16 +13,16 @@ func main() {
 
 func parseLines(lines []string) []game {
 	var games []game
-	sumOfgame := 0
+	sumOfGame := 0
 	for _, line := range lines {
 		thisRound := game{
 			result: line,
 			points: pointsAwarded[line],
 		}
 		games = append(games, thisRound)
-		sumOfgame += thisRound.points
+		sumOfGame += thisRound.points
 	}
-	fmt.Printf("Your points: %d after %d games.\n", sumOfgame, len(games))
+	fmt.Printf("Your points: %d after %d games.\n", sumOfGame, len(games))
 	return games
 }
 
