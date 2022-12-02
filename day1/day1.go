@@ -1,4 +1,4 @@
-package main
+package day1
 
 import (
 	"adventofcode-go-2022/util"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func main() {
+func Part1() {
 	lines := util.ReadFile("day1/calories.txt")
 	elves := parseLines(lines)
 
