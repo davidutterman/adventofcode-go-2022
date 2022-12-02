@@ -6,52 +6,34 @@ import (
 )
 
 func main() {
-	lines := util.ReadFile("day2/input.txt")
-	results := parseLines(lines)
-	fmt.Println(results)
+	points := parseLines(util.ReadFile("day2/input.txt"))
+	fmt.Printf("Your points: %d\n", points)
 }
 
-func parseLines(lines []string) []game {
-	var games []game
-	sumOfGame := 0
+func parseLines(lines []string) int {
+	sum := 0
 	for _, line := range lines {
-		thisRound := game{
-			result: line,
-			points: pointsAwarded[line],
-		}
-		games = append(games, thisRound)
-		sumOfGame += thisRound.points
+		sum += pointsAwarded[line]
 	}
-	fmt.Printf("Your points: %d after %d games.\n", sumOfGame, len(games))
-	return games
-}
-
-type game struct {
-	result string
-	points int
+	return sum
 }
 
 /*
-Opponent
-A = Rock
-B = Paper
-C = Scissors
-
-Response, (score)
-X = Rock (1)
-Y = Paper (2)
-Z = Scissors (3)
+Opponent		Response (points)	Results (points)
+A = Rock		X = Rock(1)			Lose(0)
+B = Paper		Y = Paper(2)		Draw(3)
+C = Scissors	Z = Scissors(3)		Win(6)
 */
 var pointsAwarded = map[string]int{
-	"A X": 4, // Rock vs. rock(1) draw(3)
-	"A Y": 8, // Rock vs. paper(2) + win(6)
-	"A Z": 3, // Rock vs. scissors(3) + lose(0)
+	"A X": 4, // Rock vs. Rock(1) + draw(3)
+	"A Y": 8, // Rock vs. Paper(2) + win(6)
+	"A Z": 3, // Rock vs. Scissors(3) + lose(0)
 
-	"B X": 1, // Paper vs. rock(1) + lose(0)
-	"B Y": 5, // Paper vs. paper(2) + draw(3)
-	"B Z": 9, // Paper vs. scissors(3) + win(6)
+	"B X": 1, // Paper vs. Rock(1) + lose(0)
+	"B Y": 5, // Paper vs. Paper(2) + draw(3)
+	"B Z": 9, // Paper vs. Scissors(3) + win(6)
 
-	"C X": 7, // Scissors vs. rock(1) + win(6)
-	"C Y": 2, // Scissors vs. paper(2) + lose(0)
-	"C Z": 6, // Scissors vs. scissors(3) + draw(3)
+	"C X": 7, // Scissors vs. Rock(1) + win(6)
+	"C Y": 2, // Scissors vs. Paper(2) + lose(0)
+	"C Z": 6, // Scissors vs. Scissors(3) + draw(3)
 }
