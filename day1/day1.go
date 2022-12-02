@@ -2,23 +2,25 @@ package day1
 
 import (
 	"adventofcode-go-2022/util"
-	"fmt"
 	"sort"
 	"strconv"
 )
 
-func Part1() {
-	lines := util.ReadFile("day1/calories.txt")
-	elves := parseLines(lines)
+var inputFile = "day1/calories.txt"
 
-	findElfWithMostCalories(elves)
+func Part1() int {
+	elves := parseLines(util.ReadFile(inputFile))
+	return findElfWithMostCalories(elves)
+}
+
+func Part2() int {
+	elves := parseLines(util.ReadFile(inputFile))
 	sortBySumOfCalories(elves)
-	topThree(elves)
+	return sumTopThree(elves)
 }
 
 type elf struct {
-	packedCalories []int
-	sumOfCalories  int
+	calories int
 }
 
 func parseLines(lines []string) []elf {
@@ -32,37 +34,32 @@ func parseLines(lines []string) []elf {
 			continue
 		}
 
-		calories, err := strconv.Atoi(line)
-		if err != nil {
-			fmt.Printf("error converting %s to int", line)
-			continue
-		}
-		myElf.packedCalories = append(myElf.packedCalories, calories)
-		myElf.sumOfCalories += calories
+		calories, _ := strconv.Atoi(line)
+		myElf.calories += calories
 	}
 	return allElves
 }
 
 func sortBySumOfCalories(elves []elf) {
 	sort.Slice(elves, func(i, j int) bool {
-		return elves[i].sumOfCalories > elves[j].sumOfCalories
+		return elves[i].calories > elves[j].calories
 	})
 }
 
-func topThree(elves []elf) {
-	sumCalories := 0
+func sumTopThree(elves []elf) int {
+	sum := 0
 	for i := 0; i <= 2; i++ {
-		sumCalories += elves[i].sumOfCalories
+		sum += elves[i].calories
 	}
-	fmt.Printf("Sum of top three elves packs: %v\n", sumCalories)
+	return sum
 }
 
-func findElfWithMostCalories(elves []elf) {
+func findElfWithMostCalories(elves []elf) int {
 	maxElf := elf{}
 	for _, myElf := range elves {
-		if maxElf.sumOfCalories < myElf.sumOfCalories {
+		if maxElf.calories < myElf.calories {
 			maxElf = myElf
 		}
 	}
-	fmt.Printf("Elf with most calories: %v\n", maxElf)
+	return maxElf.calories
 }

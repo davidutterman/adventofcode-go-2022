@@ -4,21 +4,23 @@ import (
 	"adventofcode-go-2022/util"
 )
 
+const inputFile = "day2/input.txt"
+
 const ( // Response played
 	Rock    = 1 // X
 	Paper   = 2 // Y
 	Scissor = 3 // Z
 )
 
-const ( // Results
+const ( // Points per game
 	Lose = 0
 	Draw = 3
 	Win  = 6
 )
 
-// Opponent A = Rock B = Paper C = Scissors
+// Opponent A = Rock, B = Paper, C = Scissors
 func Part1() int {
-	var points = map[string]int{
+	var pointMap = map[string]int{
 		"A X": Rock + Draw,    // Rock vs. rock
 		"A Y": Paper + Win,    // Rock vs. paper
 		"A Z": Scissor + Lose, // Rock vs. scissors
@@ -31,37 +33,33 @@ func Part1() int {
 		"C Y": Paper + Lose,   // Scissors vs. paper
 		"C Z": Scissor + Draw, // Scissors vs. scissors
 	}
-	return sum(getPlayedHands(), points)
+	return sumOfGames(util.ReadFile(inputFile), pointMap)
 }
 
 func Part2() int {
-	var points = map[string]int{
+	var pointMap = map[string]int{
 		// X needs to Lose
-		"A X": Scissor + Lose, // Rock vs. Scissors
-		"B X": Rock + Lose,    // Paper vs. Rock
-		"C X": Paper + Lose,   // Scissors vs. Paper
+		"A X": Scissor + Lose, // Rock vs. scissors
+		"B X": Rock + Lose,    // Paper vs. rock
+		"C X": Paper + Lose,   // Scissors vs. paper
 
 		// Y needs to Draw
-		"A Y": Rock + Draw,    // Rock vs. Rock
-		"B Y": Paper + Draw,   // Paper vs. Paper
-		"C Y": Scissor + Draw, // Scissors vs. Scissors
+		"A Y": Rock + Draw,    // Rock vs. rock
+		"B Y": Paper + Draw,   // Paper vs. paper
+		"C Y": Scissor + Draw, // Scissors vs. scissors
 
 		//Z needs to Win
-		"A Z": Paper + Win,   // Rock vs. Paper
-		"B Z": Scissor + Win, // Paper vs. Scissors
-		"C Z": Rock + Win,    // Scissors vs. Rock
+		"A Z": Paper + Win,   // Rock vs. paper
+		"B Z": Scissor + Win, // Paper vs. scissors
+		"C Z": Rock + Win,    // Scissors vs. rock
 	}
-	return sum(getPlayedHands(), points)
+	return sumOfGames(util.ReadFile(inputFile), pointMap)
 }
 
-func getPlayedHands() []string {
-	return util.ReadFile("day2/input.txt")
-}
-
-func sum(lines []string, awarded map[string]int) int {
+func sumOfGames(lines []string, points map[string]int) int {
 	sum := 0
 	for _, line := range lines {
-		sum += awarded[line]
+		sum += points[line]
 	}
 	return sum
 }
