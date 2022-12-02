@@ -1,13 +1,12 @@
 package main
 
 import (
-	"bufio"
+	"adventofcode-go-2022/util"
 	"fmt"
-	"os"
 )
 
 func main() {
-	lines := readFile("day2/input.txt")
+	lines := util.ReadFile("day2/input.txt")
 	results := parseLines(lines)
 	fmt.Println(results)
 }
@@ -55,19 +54,4 @@ var pointsAwarded = map[string]int{
 	"C X": 7, // Scissors vs. rock(1) + win(6)
 	"C Y": 2, // Scissors vs. paper(2) + lose(0)
 	"C Z": 6, // Scissors vs. scissors(3) + draw(3)
-}
-
-func readFile(path string) []string {
-	file, err := os.Open(path)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
 }

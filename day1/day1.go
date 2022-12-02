@@ -1,15 +1,14 @@
 package main
 
 import (
-	"bufio"
+	"adventofcode-go-2022/util"
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
 )
 
 func main() {
-	lines := readFile("day1/calories.txt")
+	lines := util.ReadFile("day1/calories.txt")
 	elves := parseLines(lines)
 
 	findElfWithMostCalories(elves)
@@ -20,21 +19,6 @@ func main() {
 type elf struct {
 	packedCalories []int
 	sumOfCalories  int
-}
-
-func readFile(path string) []string {
-	file, err := os.Open(path)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
 }
 
 func parseLines(lines []string) []elf {
@@ -65,10 +49,10 @@ func sortBySumOfCalories(elves []elf) {
 	})
 }
 
-func topThree(elfs []elf) {
+func topThree(elves []elf) {
 	sumCalories := 0
 	for i := 0; i <= 2; i++ {
-		sumCalories += elfs[i].sumOfCalories
+		sumCalories += elves[i].sumOfCalories
 	}
 	fmt.Printf("Sum of top three elves packs: %v\n", sumCalories)
 }

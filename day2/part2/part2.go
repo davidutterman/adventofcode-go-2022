@@ -1,29 +1,28 @@
 package main
 
 import (
-	"bufio"
+	"adventofcode-go-2022/util"
 	"fmt"
-	"os"
 )
 
 func main() {
-	lines := readFile("day2/input.txt")
+	lines := util.ReadFile("day2/input.txt")
 	results := parseLines(lines)
 	fmt.Println(results)
 }
 
 func parseLines(lines []string) []game {
 	var games []game
-	sumOfGame := 0
+	sumOfgame := 0
 	for _, line := range lines {
 		thisRound := game{
 			result: line,
 			points: pointsAwarded[line],
 		}
 		games = append(games, thisRound)
-		sumOfGame += thisRound.points
+		sumOfgame += thisRound.points
 	}
-	fmt.Printf("Your points: %d after %d games.\n", sumOfGame, len(games))
+	fmt.Printf("Your points: %d after %d games.\n", sumOfgame, len(games))
 	return games
 }
 
@@ -33,12 +32,12 @@ type game struct {
 }
 
 /*
-Opponent
-A = Rock
-B = Paper
-C = Scissors
+Opponent, (score)
+A = Rock (1)
+B = Paper (2)
+C = Scissors (3)
 
-Response, (score)
+Response ?
 X = ?
 Y = ?
 Z = ?
@@ -55,19 +54,4 @@ var pointsAwarded = map[string]int{
 	"A Z": 8, // Need to win(6) Rock vs. Paper(2)
 	"B Z": 9, // Need to win(6) Paper vs. Scissors(3)
 	"C Z": 7, // Need to win(6) Scissors vs. Rock(1)
-}
-
-func readFile(path string) []string {
-	file, err := os.Open(path)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	var lines []string
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lines = append(lines, scanner.Text())
-	}
-	return lines
 }
