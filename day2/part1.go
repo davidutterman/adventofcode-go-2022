@@ -17,24 +17,21 @@ func parseLines(lines []string) {
 	fmt.Printf("Your points: %d\n", sum)
 }
 
+// Response (points)
+const (
+	Rock    = 1 // X
+	Paper   = 2 // Y
+	Scissor = 3 // Z
+)
+
+// Results (points)
 const (
 	Lose = 0
 	Draw = 3
 	Win  = 6
 )
 
-const (
-	Rock    = 1
-	Paper   = 2
-	Scissor = 3
-)
-
-/*
-Opponent		Response (points)	Results (points)
-A = Rock		X = Rock(1)			Lose(0)
-B = Paper		Y = Paper(2)		Draw(3)
-C = Scissors	Z = Scissors(3)		Win(6)
-*/
+// Opponent A = Rock B = Paper C = Scissors
 var pointsAwarded = map[string]int{
 	"A X": Rock + Draw,
 	"A Y": Paper + Win,
