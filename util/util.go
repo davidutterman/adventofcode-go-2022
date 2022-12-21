@@ -3,6 +3,7 @@ package util
 import (
 	"bufio"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -31,4 +32,12 @@ func fixPath() {
 	if strings.HasSuffix(wd[:len(wd)-1], "day") {
 		os.Chdir("..")
 	}
+}
+
+func ParseInt(s string) int {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		panic(err)
+	}
+	return i
 }

@@ -2,95 +2,72 @@ package day5
 
 import (
 	"adventofcode-go-2022/util"
-	"strconv"
 	"strings"
 )
 
-type instruction struct {
-	nrOfBoxes int
-	from      int
-	to        int
-}
-
 func Part1() string {
-	lines := util.ReadFile("day5/input.txt")
-
-	piles := parsePiles(lines[:8])
-	instructions := parseInstructions(lines[10:])
-
-	piles = moveBoxes(piles, instructions)
-
-	return getTopBoxes(piles)
+	piles := moveCrates(parseInput())
+	return readTopCrates(piles)
 }
 
 func Part2() string {
+	piles := moveMultipleCrates(parseInput())
+	return readTopCrates(piles)
+}
+
+func parseInput() ([][]string, []instruction) {
 	lines := util.ReadFile("day5/input.txt")
-
-	piles := parsePiles(lines[:8])
-	instructions := parseInstructions(lines[10:])
-
-	piles = moveMultipleBoxes(piles, instructions)
-
-	return getTopBoxes(piles)
-
+	return parsePiles(lines[:8]), parseInstructions(lines[10:])
 }
 
-func getTopBoxes(piles [][]string) string {
-	var result string
+func readTopCrates(piles [][]string) string {
+	var labels string
 	for _, pile := range piles {
-		result += pile[len(pile)-1]
+		labels += pile[len(pile)-1]
 	}
-	return result
+	return labels
 }
 
-func moveMultipleBoxes(piles [][]string, instructions []instruction) [][]string {
-	for _, inst := range instructions {
+func moveMultipleCrates(piles [][]string, instructions []instruction) [][]string {
+	for _, i := range instructions {
+		fromPile := piles[i.indexFrom]
 
-		fromPile := piles[inst.from-1]
-		nrFrom := len(fromPile)
+		indexCrate := len(fromPile) - i.numberOfCrates
 
-		boxesToMove := fromPile[nrFrom-inst.nrOfBoxes:]
-
-		piles[inst.from-1] = fromPile[:nrFrom-inst.nrOfBoxes]
-
-		for _, c := range boxesToMove {
-			piles[inst.to-1] = append(piles[inst.to-1], c)
-		}
+		piles[i.indexFrom] = fromPile[:indexCrate]
+		piles[i.indexTo] = append(piles[i.indexTo], fromPile[indexCrate:]...)
 	}
 	return piles
 }
 
-func moveBoxes(piles [][]string, instructions []instruction) [][]string {
-	for _, inst := range instructions {
-		for i := inst.nrOfBoxes; i > 0; i-- {
-			fromPile := piles[inst.from-1]
-			nrFrom := len(fromPile) - 1
+func moveCrates(piles [][]string, instructions []instruction) [][]string {
+	for _, i := range instructions {
+		for j := i.numberOfCrates; j > 0; j-- {
+			fromPile := piles[i.indexFrom]
+			crateIndex := len(fromPile) - 1
 			var crate string
-			crate, piles[inst.from-1] = fromPile[nrFrom], fromPile[:nrFrom]
-			piles[inst.to-1] = append(piles[inst.to-1], crate)
+			crate, piles[i.indexFrom] = fromPile[crateIndex], fromPile[:crateIndex]
+			piles[i.indexTo] = append(piles[i.indexTo], crate)
 		}
 	}
 	return piles
+}
+
+type instruction struct {
+	numberOfCrates int
+	indexFrom      int
+	indexTo        int
 }
 
 func parseInstructions(lines []string) []instruction {
 	var i []instruction
-
 	for _, line := range lines {
 		tokens := strings.Fields(line)
 		i = append(i, instruction{
-			parseInt(tokens[1]),
-			parseInt(tokens[3]),
-			parseInt(tokens[5]),
+			util.ParseInt(tokens[1]),
+			util.ParseInt(tokens[3]) - 1,
+			util.ParseInt(tokens[5]) - 1,
 		})
-	}
-	return i
-}
-
-func parseInt(s string) int {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		panic(err)
 	}
 	return i
 }
